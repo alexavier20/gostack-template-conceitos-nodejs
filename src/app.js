@@ -29,7 +29,7 @@ app.put("/repositories/:id", (request, response) => {
   const { id } = request.params;
   const { title, url, techs, } = request.body;
 
-  const projectIndex = repositories.findIndex(project => project.id === id);
+  const projectIndex = repositories.findIndex(project => project.id === id);  
 
   if(projectIndex < 0) {
     return response.status(400).json({ error: 'Project not found.'});
@@ -66,6 +66,12 @@ app.post("/repositories/:id/like", (request, response) => {
   const { id } = request.params; 
   const { user } = request.body;
 
+  const projectIndex = repositories.findIndex(project => project.id === id);
+
+  if(projectIndex < 0) {
+    return response.status(400).json({ error: 'Project not found.'});
+  }
+
   const like = { id: uuid(), repositoryId: id, user };
   likes.push(like);
   
@@ -75,9 +81,7 @@ app.post("/repositories/:id/like", (request, response) => {
     if (likes[i].repositoryId == id) {
       likesCount ++;
     }
-  }
-
-  const projectIndex = repositories.findIndex(project => project.id === id);
+  } 
 
   const { title, url, techs } = repositories[projectIndex];
   const project = {
